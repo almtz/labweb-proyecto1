@@ -1,5 +1,8 @@
+import { useFirebaseAuth } from "../contexts/AuthContext";
+
 const Home = () => {
-  return <p>Hola</p>;
+  const { logOut } = useFirebaseAuth();
+  return <button onClick={logOut}>Log Out</button>;
 };
 
 export default Home;

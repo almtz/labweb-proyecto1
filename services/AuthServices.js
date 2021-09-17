@@ -33,6 +33,7 @@ export const AuthServices = {
         };
       });
   },
+
   logInWithEmail: async (email, password) => {
     const auth = getAuth();
     await signInWithEmailAndPassword(auth, email, password)

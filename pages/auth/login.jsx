@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFirebaseAuth } from "../../contexts/AuthContext";
 import {
   Grid,
@@ -14,6 +14,7 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import { LockOutlined } from "@material-ui/icons";
+import { useRouter } from "next/dist/client/router";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,13 +50,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const LogIn = () => {
+  const router = useRouter();
   const classes = useStyles();
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
-  const { logInWithGoogle } = useFirebaseAuth();
+  const { user, logInWithGoogle, logInWithEmailAndPassword } =
+    useFirebaseAuth();
+  console.log(user);
 
   const handleChange = (e) => {
     const { value, id } = e.target;
@@ -77,6 +81,12 @@ const LogIn = () => {
         const errorMessage = error.message;
       });
   };
+
+  useEffect(() => {
+    if (user) {
+      router.push("/");
+    }
+  }, [user, router]);
 
   return (
     <Grid container component="main" className={classes.root}>

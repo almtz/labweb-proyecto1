@@ -1,6 +1,7 @@
 import { getAuth, onAuthStateChanged } from "@firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import { AuthServices } from "../services/AuthServices";
+import nookies from "nookies";
 
 export const AuthContext = createContext();
 
@@ -9,9 +10,7 @@ export const AuthContextProvider = (props) => {
   const [error, setError] = useState("");
 
   const logInWithGoogle = async () => {
-    const { error, user } = await AuthServices.logInWithGoogle();
-    setUser(user ?? null);
-    setError(error ?? "");
+    await AuthServices.logInWithGoogle();
   };
 
   const logOut = async () => {
@@ -19,9 +18,29 @@ export const AuthContextProvider = (props) => {
     setUser(null);
   };
 
+  // Listens for the changed in auth token from firebase
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(getAuth(), setUser, setError);
-    return () => unsubscribe();
+    return getAuth().onIdTokenChanged(async (user) => {
+      if (!user) {
+        setUser(null);
+        nookies.set(undefined, "token", "", { path: "/" });
+      } else {
+        const token = await user.getIdToken();
+        setUser(user);
+        nookies.set(undefined, "token", token, { path: "/" });
+      }
+    });
+  }, []);
+
+  // Force the refresh of the token cookie depending on firebase session refresh
+  useEffect(() => {
+    const handle = setInterval(async () => {
+      const user = getAuth().currentUser;
+      if (user) await user.getIdToken(true);
+    }, 10 * 60 * 1000);
+
+    // clean up setInterval
+    return () => clearInterval(handle);
   }, []);
 
   return (
