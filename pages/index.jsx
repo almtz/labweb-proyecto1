@@ -1,3 +1,5 @@
+
+import { useFirebaseAuth } from "../contexts/AuthContext";
 import {
   Typography,
   AppBar,
@@ -18,6 +20,7 @@ import useStyles from "./styles";
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 const Home = () => {
+  const { logOut } = useFirebaseAuth();
   const classes = useStyles();
 
   return (
@@ -117,6 +120,7 @@ const Home = () => {
         </Typography>
       </footer>
     </>
+<button onClick={logOut}>Log Out</button>
   );
 };
 

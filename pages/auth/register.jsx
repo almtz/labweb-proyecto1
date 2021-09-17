@@ -55,15 +55,11 @@ const Register = () => {
 
   const handleSubmit = async () => {
     const auth = getAuth();
-    try {
-      await createUserWithEmailAndPassword(auth, form.email, form.password)
-        .then((user) => {
-          router.push("/auth/login");
-        })
-        .catch((err) => console.log(err));
-    } catch (error) {
-      alert(error.message);
-    }
+    await createUserWithEmailAndPassword(auth, form.email, form.password)
+      .then((user) => {
+        router.push("/auth/login");
+      })
+      .catch((err) => alert(err));
   };
 
   return (
