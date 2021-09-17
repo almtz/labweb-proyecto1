@@ -1,5 +1,5 @@
-import { useCallback, useState } from "react";
-import { getAuth, signInWithEmailAndPassword } from "@firebase/auth";
+import { useState } from "react";
+import { useFirebaseAuth } from "../../contexts/AuthContext";
 import {
   Grid,
   Avatar,
@@ -55,25 +55,28 @@ const LogIn = () => {
     password: "",
   });
 
+  const { logInWithGoogle } = useFirebaseAuth();
+
   const handleChange = (e) => {
     const { value, id } = e.target;
     setForm({ ...form, [id]: value });
     e.preventDefault();
   };
 
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = async () => {
     const auth = getAuth();
-    signInWithEmailAndPassword(auth, form.email, form.password)
+    await signInWithEmailAndPassword(auth, form.email, form.password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
+        console.log(user);
         // ...
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
       });
-  });
+  };
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -87,7 +90,7 @@ const LogIn = () => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate onSubmit={handleSubmit}>
+          <form className={classes.form} noValidate>
             <TextField
               variant="outlined"
               margin="normal"
@@ -119,11 +122,11 @@ const LogIn = () => {
               label="Remember me"
             />
             <Button
-              type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={handleSubmit}
             >
               Sign In
             </Button>
@@ -137,6 +140,18 @@ const LogIn = () => {
                 <Link href="#" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
+              </Grid>
+            </Grid>
+            <Grid container>
+              <Grid item xs>
+                <Button onClick={logInWithGoogle} className={classes.submit}>
+                  Sign In whit Google
+                </Button>
+              </Grid>
+              <Grid item xs>
+                <Button onClick={logInWithGoogle} className={classes.submit}>
+                  Sign In whit
+                </Button>
               </Grid>
             </Grid>
           </form>

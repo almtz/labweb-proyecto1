@@ -1,6 +1,7 @@
 import "../scss/main.scss";
 import { firebaseInit } from "../utils/firebase";
 import Head from "next/head";
+import { AuthContextProvider } from "../contexts/AuthContext";
 
 firebaseInit();
 
@@ -18,7 +19,9 @@ const MyApp = ({ Component, pageProps }) => {
           href="https://fonts.googleapis.com/icon?family=Material+Icons"
         />
       </Head>
-      <Component {...pageProps} />;
+      <AuthContextProvider>
+        <Component {...pageProps} />;
+      </AuthContextProvider>
     </>
   );
 };
