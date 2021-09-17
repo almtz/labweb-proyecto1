@@ -1,4 +1,5 @@
-import { NextPage } from "next";
+import { useState } from "react";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import {
   Avatar,
   Button,
@@ -8,12 +9,12 @@ import {
   Checkbox,
   Link,
   Grid,
-  Box,
   Typography,
   makeStyles,
   Container,
 } from "@material-ui/core";
 import { LockOutlined } from "@material-ui/icons";
+import { useRouter } from "next/dist/client/router";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -35,8 +36,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Register: NextPage = () => {
+const Register = () => {
   const classes = useStyles();
+  const router = useRouter();
+
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+  });
+
+  const handleChange = (e) => {
+    const { value, id } = e.target;
+    setForm({ ...form, [id]: value });
+    e.preventDefault();
+  };
+
+  const handleSubmit = async () => {
+    const auth = getAuth();
+    try {
+      await createUserWithEmailAndPassword(auth, form.email, form.password)
+        .then((user) => {
+          router.push("/auth/login");
+        })
+        .catch((err) => console.log(err));
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -60,6 +88,8 @@ const Register: NextPage = () => {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                value={form.firstName}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -71,6 +101,8 @@ const Register: NextPage = () => {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+                value={form.lastName}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -82,6 +114,8 @@ const Register: NextPage = () => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                value={form.email}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -94,6 +128,8 @@ const Register: NextPage = () => {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={form.password}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -104,10 +140,10 @@ const Register: NextPage = () => {
             </Grid>
           </Grid>
           <Button
-            type="submit"
             fullWidth
             variant="contained"
             color="primary"
+            onClick={handleSubmit}
             className={classes.submit}
           >
             Sign Up

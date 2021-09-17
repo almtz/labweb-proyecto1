@@ -1,4 +1,5 @@
-import { NextPage } from "next";
+import { useCallback, useState } from "react";
+import { getAuth, signInWithEmailAndPassword } from "@firebase/auth";
 import {
   Grid,
   Avatar,
@@ -47,8 +48,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LogIn: NextPage = () => {
+const LogIn = () => {
   const classes = useStyles();
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    const { value, id } = e.target;
+    setForm({ ...form, [id]: value });
+    e.preventDefault();
+  };
+
+  const handleSubmit = useCallback(async () => {
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, form.email, form.password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+  });
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -62,7 +87,7 @@ const LogIn: NextPage = () => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} noValidate onSubmit={handleSubmit}>
             <TextField
               variant="outlined"
               margin="normal"
@@ -73,6 +98,8 @@ const LogIn: NextPage = () => {
               name="email"
               autoComplete="email"
               autoFocus
+              value={form.email}
+              onChange={handleChange}
             />
             <TextField
               variant="outlined"
@@ -84,6 +111,8 @@ const LogIn: NextPage = () => {
               type="password"
               id="password"
               autoComplete="current-password"
+              value={form.password}
+              onChange={handleChange}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

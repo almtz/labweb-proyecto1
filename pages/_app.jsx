@@ -1,11 +1,10 @@
 import "../scss/main.scss";
-import type { AppProps } from "next/app";
 import { firebaseInit } from "../utils/firebase";
 import Head from "next/head";
 
 firebaseInit();
 
-const MyApp = ({ Component, pageProps }: AppProps) => {
+const MyApp = ({ Component, pageProps }) => {
   return (
     <>
       <Head>
