@@ -118,10 +118,16 @@ const Home = () => {
         <Typography variant="subtitle1" align="center" color="textSecondary">
           ¡Gracias por apoyarnos!
         </Typography>
+         <Grid>
+          <Grid container spacing={1} justify="center">
+            <button onClick={logOut} variant="outlined" color="primary">
+              Log Out
+            </button>
+          </Grid>
+        </Grid>
       </footer>
     </>
-  )
-}
-{/* <button onClick={logOut}>Log Out</button> */}
+  );
+};
 
 export default Home;
