@@ -155,14 +155,14 @@ const LogIn = () => {
             <Grid container>
               <Grid item xs>
                 <Button onClick={logInWithGoogle} className={classes.submit}>
-                  Sign In whit Google
+                  Sign In with Google
                 </Button>
               </Grid>
-              <Grid item xs>
+              {/* <Grid item xs>
                 <Button onClick={logInWithGoogle} className={classes.submit}>
-                  Sign In whit
+                  Sign In with [SocialMedia]
                 </Button>
-              </Grid>
+              </Grid> */}
             </Grid>
           </form>
         </div>

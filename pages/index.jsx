@@ -120,8 +120,8 @@ const Home = () => {
         </Typography>
       </footer>
     </>
-<button onClick={logOut}>Log Out</button>
-  );
-};
+  )
+}
+{/* <button onClick={logOut}>Log Out</button> */}
 
 export default Home;
