@@ -1,5 +1,5 @@
-import { useCallback, useState } from "react";
-import { getAuth, signInWithEmailAndPassword } from "@firebase/auth";
+import { useEffect, useState } from "react";
+import { useFirebaseAuth } from "../../contexts/AuthContext";
 import {
   Grid,
   Avatar,
@@ -14,6 +14,7 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import { LockOutlined } from "@material-ui/icons";
+import { useRouter } from "next/dist/client/router";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,11 +50,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const LogIn = () => {
+  const router = useRouter();
   const classes = useStyles();
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+
+  const { user, logInWithGoogle, logInWithEmailAndPassword } =
+    useFirebaseAuth();
+  console.log(user);
 
   const handleChange = (e) => {
     const { value, id } = e.target;
@@ -61,19 +67,26 @@ const LogIn = () => {
     e.preventDefault();
   };
 
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = async () => {
     const auth = getAuth();
-    signInWithEmailAndPassword(auth, form.email, form.password)
+    await signInWithEmailAndPassword(auth, form.email, form.password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
+        console.log(user);
         // ...
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
       });
-  });
+  };
+
+  useEffect(() => {
+    if (user) {
+      router.push("/");
+    }
+  }, [user, router]);
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -87,7 +100,7 @@ const LogIn = () => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate onSubmit={handleSubmit}>
+          <form className={classes.form} noValidate>
             <TextField
               variant="outlined"
               margin="normal"
@@ -119,11 +132,11 @@ const LogIn = () => {
               label="Remember me"
             />
             <Button
-              type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={handleSubmit}
             >
               Sign In
             </Button>
@@ -138,6 +151,18 @@ const LogIn = () => {
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
+            </Grid>
+            <Grid container>
+              <Grid item xs>
+                <Button onClick={logInWithGoogle} className={classes.submit}>
+                  Sign In with Google
+                </Button>
+              </Grid>
+              {/* <Grid item xs>
+                <Button onClick={logInWithGoogle} className={classes.submit}>
+                  Sign In with [SocialMedia]
+                </Button>
+              </Grid> */}
             </Grid>
           </form>
         </div>
