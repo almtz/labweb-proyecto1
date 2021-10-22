@@ -110,7 +110,7 @@ const Home = ({ listItems }) => {
                 ? listItems.map((item, index) => {
                     if (
                       item.visibility === visibilityEnum.publica ||
-                      item.creator.id === user.uid
+                      item.creator.uid === user.uid
                     ) {
                       return <ListElementCard key={index} element={item} />;
                     }
