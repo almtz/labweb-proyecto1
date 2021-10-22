@@ -14,28 +14,15 @@ import {
 import CasinoIcon from "@mui/icons-material/Casino";
 import { Button } from "@mui/material";
 import Link from "next/link";
+import { firestore } from "../utils/firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 import useStyles from "../utils/styles";
-import { auth } from "../utils/firebase";
+import ListElementCard from "../components/ListElementCard";
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-// export function getServerSideProps(){
-
-//   const auth = getAuth();
-//   let loggedState = false;
-//   console.log("Important info! - " + auth.currentUser);
-//   if(auth.currentUser != null){
-//     loggedState = true;
-//   }
-//   return {
-//     props: {
-//       loggedState
-//     }
-//   }
-// }
-
-const Home = () => {
+const Home = ({ listItems }) => {
   const { isAuthenticated, logOut } = useFirebaseAuth();
   const classes = useStyles();
 
@@ -120,6 +107,9 @@ const Home = () => {
               ¡Checa las listas más populares!
             </Typography>
             <Grid container spacing={4}>
+              {listItems.map((item, index) => (
+                <ListElementCard key={index} element={item} />
+              ))}
               {cards.map((card) => (
                 <Grid item key={card} xs={12} sm={6} md={4}>
                   <Card className={classes.card}>
@@ -169,6 +159,18 @@ const Home = () => {
       </footer>
     </>
   );
+};
+
+export const getServerSideProps = async () => {
+  const listItems = [];
+  const querySnapShot = await getDocs(collection(firestore, "TierLists"));
+  querySnapShot.forEach((doc) => {
+    listItems.push(doc.data());
+  });
+
+  return {
+    props: { listItems },
+  };
 };
 
 export default Home;

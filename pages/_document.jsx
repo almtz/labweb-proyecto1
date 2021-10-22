@@ -8,7 +8,6 @@ export default class MyDocument extends Document {
       <Html lang="en">
         <Head>
           {/* Not exactly required, but this is the PWA primary color */}
-          <title>Lab Web Proyecto 1</title>
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
@@ -17,6 +16,8 @@ export default class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/icon?family=Material+Icons"
           />
+          {/* eslint-disable-next-line @next/next/no-title-in-document-head */}
+          <title>hola</title>
         </Head>
         <body>
           <Main />
