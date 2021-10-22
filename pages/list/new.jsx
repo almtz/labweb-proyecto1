@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/dist/client/router";
 import { addDoc, collection } from "firebase/firestore";
 import { firestore } from "../../utils/firebase";
 import {
@@ -35,6 +36,7 @@ const New = () => {
     },
   }));
   const classes = useStyles();
+  const router = useRouter();
   const { user } = useFirebaseAuth();
 
   const [tierListName, setTierListName] = useState("");
@@ -56,12 +58,7 @@ const New = () => {
     e.preventDefault();
   };
 
-  const submitNewList = async (event) => {
-    event.preventDefault();
-
-    setSubmitStatus(true);
-    setButtonDisabled(true);
-
+  const uploadList = async () => {
     await addDoc(collection(firestore, "TierLists"), {
       creator: {
         uid: user.uid,
@@ -72,6 +69,28 @@ const New = () => {
       rating: 0,
       visibility: "public",
     });
+    router.push("/");
+  }
+
+  const submitNewList = async (event) => {
+    event.preventDefault();
+
+    setSubmitStatus(true);
+    setButtonDisabled(true);
+
+    if (variantNumber === variantInfoArray.length) {
+      uploadList();
+    }
+    else{
+      setTimeout(function(){ 
+        if (variantNumber === variantInfoArray.length) {
+          uploadList();
+        }
+        else{
+          setButtonDisabled(false);
+        }
+      }, 1200);
+    }
   };
 
   return (
@@ -133,7 +152,7 @@ const New = () => {
               Remover último elemento
             </Button>
           </Grid>
-          <Button onClick={submitNewList} variant="contained" color="primary">
+          <Button disabled={buttonState} onClick={submitNewList} variant="contained" color="primary">
             Submit
           </Button>
         </FormControl>
