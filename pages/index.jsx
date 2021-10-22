@@ -21,15 +21,8 @@ import useStyles from "../utils/styles";
 import ListElementCard from "../components/ListElementCard";
 import visibilityEnum from "../utils/visibilityEnum";
 
-<<<<<<< HEAD
 const Home = ({ listItems }) => {
   const { user, isAuthenticated, logOut } = useFirebaseAuth();
-=======
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-const Home = () => {
-  const { isAuthenticated, logOut } = useFirebaseAuth();
->>>>>>> f89d7b5 (Avances Front Detail Lista)
   const classes = useStyles();
 
   return (
