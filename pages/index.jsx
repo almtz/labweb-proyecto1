@@ -1,5 +1,6 @@
-
 import { useFirebaseAuth } from "../contexts/AuthContext";
+import { getAuth } from "firebase/auth";
+import React, { useState } from "react";
 import {
   Typography,
   AppBar,
@@ -14,31 +15,60 @@ import {
 } from "@material-ui/core";
 import CasinoIcon from "@mui/icons-material/Casino";
 import { Button } from "@mui/material";
+import Link from "next/link";
 
 import useStyles from "./styles";
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
+// export function getServerSideProps(){
+
+//   const auth = getAuth();
+//   let loggedState = false;
+//   console.log("Important info! - " + auth.currentUser);
+//   if(auth.currentUser != null){
+//     loggedState = true; 
+//   }
+//   return {
+//     props: {
+//       loggedState
+//     }
+//   }
+// }
+
 const Home = () => {
+
   const { logOut } = useFirebaseAuth();
   const classes = useStyles();
+
+  const PrintAuth = () => { 
+
+   }
 
   return (
     <>
       <CssBaseline />
-      <AppBar position="relative">
+      <AppBar position="static">
         <Toolbar>
           <CasinoIcon className={classes.icon} />
-          <Typography variant="h6">TTop10</Typography>
+          <Typography variant="h6" style={{ flex: 1 }}>TTop10</Typography>
+          <Button variant="contained" color="primary" style={{backgroundColor: "black"}} onClick={PrintAuth}>
+              <Link href="/newTopList">
+              <a className={classes.authButton}>Nueva Lista</a>
+              </Link>
+          </Button>
         </Toolbar>
       </AppBar>
       <main>
         <div className={classes.container}>
-          <Container maxWidth="sm" style={{ marginTop: "100px" }}>
+          <Container
+            maxWidth="sm"
+            style={{ marginTop: "100px", marginBottom: "40px" }}
+          >
             <Typography
-              variant="h2"
+              variant="h3"
               align="center"
-              color="textPrimary"
+              className={classes.landingText}
               gutterBottom
             >
               Trascendiendo Top 10
@@ -46,7 +76,7 @@ const Home = () => {
             <Typography
               variant="h5"
               align="justify"
-              color="textSecondary"
+              className={classes.landingText}
               paragraph
             >
               Bienvenido a la Trascendiendo Top 10 donde podrás realizar tus
@@ -58,12 +88,20 @@ const Home = () => {
               <Grid container spacing={2} justify="center">
                 <Grid item>
                   <Button variant="contained" color="primary">
-                    Iniciar Sesión
+                    <Link href="/auth/login">
+                      <a className={classes.authButton}>Iniciar Sesión</a>
+                    </Link>
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button variant="outlined" color="primary">
-                    Registrarme
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    style={{ backgroundColor: "white" }}
+                  >
+                    <Link href="auth/register">
+                      <a className={classes.registerButton}>Registrarme</a>
+                    </Link>
                   </Button>
                 </Grid>
               </Grid>
@@ -71,15 +109,14 @@ const Home = () => {
           </Container>
         </div>
         <div>
-          <Typography
-            variant="h5"
-            align="justify"
-            color="textSecondary"
-            paragraph
+          <Container
+            className={classes.cardGrid}
+            maxWidth="md"
+            style={{ marginTop: "30px" }}
           >
-            ¡Checa las listas más populares!
-          </Typography>
-          <Container className={classes.cardGrid} maxWidth="md">
+            <Typography variant="h5" align="center" paragraph>
+              ¡Checa las listas más populares!
+            </Typography>
             <Grid container spacing={4}>
               {cards.map((card) => (
                 <Grid item key={card} xs={12} sm={6} md={4}>
@@ -118,7 +155,7 @@ const Home = () => {
         <Typography variant="subtitle1" align="center" color="textSecondary">
           ¡Gracias por apoyarnos!
         </Typography>
-         <Grid>
+        <Grid>
           <Grid container spacing={1} justify="center">
             <button onClick={logOut} variant="outlined" color="primary">
               Log Out
