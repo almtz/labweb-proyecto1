@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  TextField,
-  Typography,
-  AppBar,
-  CssBaseline,
-  Toolbar,
-} from "@material-ui/core";
-import Link from 'next/link';
+import { TextField, Typography } from "@material-ui/core";
 import "@fontsource/roboto/400.css";
 
 const NewItemForm = ({ variant_id, sendToParent, submitFlag }) => {
@@ -29,17 +22,6 @@ const NewItemForm = ({ variant_id, sendToParent, submitFlag }) => {
 
   return (
     <>
-    <CssBaseline />
-      <AppBar position="static">
-        <Toolbar>
-          <CasinoIcon className={classes.icon} />
-          <Link href="/">
-          <Typography variant="h6" style={{ flex: 1 , paddingLeft: "20px"}}>
-            TTop10
-          </Typography>
-          </Link>
-        </Toolbar>
-      </AppBar>
       <Typography>Elemento - {variant_id}</Typography>
       <TextField
         id="name"
