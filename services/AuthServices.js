@@ -1,8 +1,8 @@
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "@firebase/auth";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../utils/firebase";
 
 export const AuthServices = {
   logInWithGoogle: async () => {
-    const auth = getAuth();
     const provider = new GoogleAuthProvider();
 
     await signInWithPopup(auth, provider)
@@ -35,7 +35,6 @@ export const AuthServices = {
   },
 
   logInWithEmail: async (email, password) => {
-    const auth = getAuth();
     await signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
@@ -49,6 +48,6 @@ export const AuthServices = {
       });
   },
   logOut: async () => {
-    await getAuth().signOut();
+    await auth.signOut();
   },
 };

@@ -1,4 +1,4 @@
-import { getAuth, onAuthStateChanged } from "@firebase/auth";
+import { getAuth } from "@firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import { AuthServices } from "../services/AuthServices";
 import nookies from "nookies";
@@ -53,5 +53,5 @@ export const AuthContextProvider = (props) => {
 
 export const useFirebaseAuth = () => {
   const auth = useContext(AuthContext);
-  return { ...auth, isAuthenticated: auth.user != undefined };
+  return { ...auth, isAuthenticated: auth.user !== undefined };
 };

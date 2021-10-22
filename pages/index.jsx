@@ -1,6 +1,4 @@
-import { useFirebaseAuth } from "../contexts/AuthContext";
-import { getAuth } from "firebase/auth";
-import React, { useState } from "react";
+import { useFirebaseAuth } from "../context/AuthContext";
 import {
   Typography,
   AppBar,
@@ -17,7 +15,7 @@ import CasinoIcon from "@mui/icons-material/Casino";
 import { Button } from "@mui/material";
 import Link from "next/link";
 
-import useStyles from "./styles";
+import useStyles from "../utils/styles";
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -27,7 +25,7 @@ const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 //   let loggedState = false;
 //   console.log("Important info! - " + auth.currentUser);
 //   if(auth.currentUser != null){
-//     loggedState = true; 
+//     loggedState = true;
 //   }
 //   return {
 //     props: {
@@ -37,13 +35,10 @@ const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 // }
 
 const Home = () => {
-
-  const { logOut } = useFirebaseAuth();
+  const { isAuthenticated, logOut } = useFirebaseAuth();
   const classes = useStyles();
 
-  const PrintAuth = () => { 
-
-   }
+  const PrintAuth = () => {};
 
   return (
     <>
@@ -51,11 +46,18 @@ const Home = () => {
       <AppBar position="static">
         <Toolbar>
           <CasinoIcon className={classes.icon} />
-          <Typography variant="h6" style={{ flex: 1 }}>TTop10</Typography>
-          <Button variant="contained" color="primary" style={{backgroundColor: "black"}} onClick={PrintAuth}>
-              <Link href="/newTopList">
+          <Typography variant="h6" style={{ flex: 1 }}>
+            TTop10
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ backgroundColor: "black" }}
+            onClick={PrintAuth}
+          >
+            <Link href="/newTopList">
               <a className={classes.authButton}>Nueva Lista</a>
-              </Link>
+            </Link>
           </Button>
         </Toolbar>
       </AppBar>
@@ -88,7 +90,7 @@ const Home = () => {
               <Grid container spacing={2} justify="center">
                 <Grid item>
                   <Button variant="contained" color="primary">
-                    <Link href="/auth/login">
+                    <Link href="auth/login">
                       <a className={classes.authButton}>Iniciar Sesión</a>
                     </Link>
                   </Button>
@@ -155,13 +157,15 @@ const Home = () => {
         <Typography variant="subtitle1" align="center" color="textSecondary">
           ¡Gracias por apoyarnos!
         </Typography>
-        <Grid>
-          <Grid container spacing={1} justify="center">
-            <button onClick={logOut} variant="outlined" color="primary">
-              Log Out
-            </button>
+        {isAuthenticated && (
+          <Grid>
+            <Grid container spacing={1} justify="center">
+              <Button onClick={logOut} variant="outlined" color="primary">
+                Log Out
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
+        )}
       </footer>
     </>
   );

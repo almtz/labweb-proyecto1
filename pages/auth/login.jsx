@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useFirebaseAuth } from "../../contexts/AuthContext";
+import { useFirebaseAuth } from "../../context/AuthContext";
 import {
   Grid,
   Avatar,
@@ -59,7 +59,6 @@ const LogIn = () => {
 
   const { user, logInWithGoogle, logInWithEmailAndPassword } =
     useFirebaseAuth();
-  console.log(user);
 
   const handleChange = (e) => {
     const { value, id } = e.target;
@@ -141,8 +140,7 @@ const LogIn = () => {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
-              </Grid>
+              <Grid item xs></Grid>
               <Grid item>
                 <Link href="/auth/register" variant="body2">
                   {"Don't have an account? Sign Up"}
