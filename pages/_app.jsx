@@ -9,7 +9,7 @@ const MyApp = ({ Component, pageProps }) => {
   return (
     <>
       <AuthContextProvider>
-        <Component {...pageProps} />;
+        <Component {...pageProps} />
       </AuthContextProvider>
     </>
   );
