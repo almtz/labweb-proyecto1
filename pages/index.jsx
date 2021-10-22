@@ -19,11 +19,10 @@ import { collection, getDocs } from "firebase/firestore";
 
 import useStyles from "../utils/styles";
 import ListElementCard from "../components/ListElementCard";
-
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+import visibilityEnum from "../utils/visibilityEnum";
 
 const Home = ({ listItems }) => {
-  const { isAuthenticated, logOut } = useFirebaseAuth();
+  const { user, isAuthenticated, logOut } = useFirebaseAuth();
   const classes = useStyles();
 
   return (
@@ -107,35 +106,21 @@ const Home = ({ listItems }) => {
               ¡Checa las listas más populares!
             </Typography>
             <Grid container spacing={4}>
-              {listItems.map((item, index) => (
-                <ListElementCard key={index} element={item} />
-              ))}
-              {cards.map((card) => (
-                <Grid item key={card} xs={12} sm={6} md={4}>
-                  <Card className={classes.card}>
-                    <CardMedia
-                      className={classes.cardMedia}
-                      image="https://source.unsplash.com/random"
-                      alt="random"
-                      title="Título de imagen"
-                    />
-                    <CardContent className={classes.cardContent}>
-                      <Typography gutterBottom variant="h5">
-                        Título de top10
-                      </Typography>
-                      <Typography>Descripción</Typography>
-                    </CardContent>
-                    <CardActions>
-                      <Button size="small" color="primary">
-                        Ver
-                      </Button>
-                      <Button size="small" color="primary">
-                        Editar
-                      </Button>
-                    </CardActions>
-                  </Card>
-                </Grid>
-              ))}
+              {isAuthenticated
+                ? listItems.map((item, index) => {
+                    return (
+                      item.visibility === visibilityEnum.publica ||
+                      item.creator.uid ===
+                        user.uid(<ListElementCard key={index} element={item} />)
+                    );
+                  })
+                : listItems.map((item, index) => {
+                    return (
+                      item.visibility === visibilityEnum.publica && (
+                        <ListElementCard key={index} element={item} />
+                      )
+                    );
+                  })}
             </Grid>
           </Container>
         </div>
