@@ -1,10 +1,8 @@
 import { useState } from "react";
+import { doc, setDoc } from "firebase/firestore";
+import { firestore } from "../../utils/firebase";
 import {
-  Box,
   Button,
-  Input,
-  InputLabel,
-  FormHelperText,
   FormControl,
   TextField,
   Grid,
@@ -13,9 +11,9 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import "@fontsource/roboto/400.css";
-import FormExtension from "../components/FormExtension";
+import NewItemForm from "../../components/NewItemForm";
 
-const NewTopList = () => {
+const New = () => {
   const useStyles = makeStyles((theme) => ({
     vertical_center: {
       width: "100%",
@@ -35,88 +33,39 @@ const NewTopList = () => {
       minWidth: "750px",
     },
   }));
-
   const classes = useStyles();
 
-  const [form, setForm] = useState({
-      tierListName: "",
-  });
-
+  const [tierListName, setTierListName] = useState("");
   const [variantInfoArray] = useState([]);
-
   const [submitStatus, setSubmitStatus] = useState(false);
-
   const [buttonState, setButtonDisabled] = useState(false);
 
-  const [variantNumber, setVariants] = useState({
-    variantNumber: 1,
-  });
-
-  const handleChange = (e) => {
-    const { value, id } = e.target;
-    setForm({ ...form, [id]: value });
-    e.preventDefault();
-  };
+  const [variantNumber, setVariants] = useState(1);
 
   const handleVariantChange = (variantInfo) => {
     variantInfoArray.push(variantInfo);
   };
 
-  const addVariant = (e) => {
-    e.preventDefault();
-    setVariants((prevState) => ({
-      ...prevState,
-      variantNumber: variantNumber.variantNumber + 1,
-    }));
-  };
-
-  const removeVariant = (e) => {
-    e.preventDefault();
-    if (variantNumber.variantNumber > 1) {
-      setVariants((prevState) => ({
-        ...prevState,
-        variantNumber: variantNumber.variantNumber - 1,
-      }));
+  const handleVariants = (e, action) => {
+    if (action === "add") setVariants(variantNumber + 1);
+    if (action === "remove") {
+      if (variantNumber > 1) setVariants(variantNumber - 1);
     }
+    e.preventDefault();
   };
 
   const submitNewList = async (event) => {
     event.preventDefault();
 
-    let data = new FormData();
-    data.append("tierListName", form.tierListName);
-    variantInfoArray.forEach((item) => {
-      let stringify = JSON.stringify(item);
-      data.append("variants", stringify);
+    setSubmitStatus(true);
+    setButtonDisabled(true);
+
+    await setDoc(doc(firestore, "TierLists"), {
+      name: tierListName,
+      items: variantInfoArray,
+      rating: 0,
+      visibility: "public",
     });
-
-    const res = await fetch("/api/registerTopList", data, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-    });
-
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      setSubmitStatus(true);
-      setButtonDisabled(true);
-      if (variantNumber.variantNumber === variantInfoArray.length) {
-        submitNewList();
-      }
-      else{
-        setTimeout(function(){ 
-          if (variantNumber.variantNumber === variantInfoArray.length) {
-            submitNewList();
-          }
-          else{
-            setButtonDisabled(false);
-          }
-        }, 2000);
-      }
-    };
-
-    const result = await res.json();
   };
 
   return (
@@ -141,22 +90,18 @@ const NewTopList = () => {
             <TextField
               id="tierListName"
               label="Tierlist Name"
-              variant="filled"
+              variant="outlined"
               fullWidth="true"
-              value={form.tierListName}
-              onChange={handleChange}
+              value={tierListName}
+              onChange={(e) => setTierListName(e.target.value)}
             />
           </Grid>
           <Typography variant="h6" component="div" gutterBottom>
             Lista de Elementos:
           </Typography>
-
-          {/*
-            Variants dyanmic-recursive form extensions.
-          */}
-
-          {[...Array(variantNumber.variantNumber)].map((value, index) => (
-            <FormExtension
+          {/* Variants dynamic-recursive form extensions. */}
+          {[...Array(variantNumber)].map((value, index) => (
+            <NewItemForm
               variant_id={index + 1}
               key={index}
               sendToParent={handleVariantChange}
@@ -168,15 +113,17 @@ const NewTopList = () => {
             <Button
               color="primary"
               type="button"
-              onClick={addVariant}>
-                Añadir otro elemento
+              onClick={(e) => handleVariants(e, "add")}
+            >
+              Añadir otro elemento
             </Button>
           </Grid>
           <Grid item xs={12}>
             <Button
-            color="secondary"
-            type="button"
-            onClick={removeVariant}>
+              color="secondary"
+              type="button"
+              onClick={(e) => handleVariants(e, "remove")}
+            >
               Remover último elemento
             </Button>
           </Grid>
@@ -189,4 +136,4 @@ const NewTopList = () => {
   );
 };
 
-export default NewTopList;
+export default New;
