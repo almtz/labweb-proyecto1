@@ -8,6 +8,9 @@ app;
 const MyApp = ({ Component, pageProps }) => {
   return (
     <>
+      <Head>
+        <title> Labweb Project 1 </title>
+      </Head>
       <AuthContextProvider>
         <Component {...pageProps} />
       </AuthContextProvider>
