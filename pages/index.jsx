@@ -31,7 +31,7 @@ const Home = ({ listItems }) => {
       <AppBar position="static">
         <Toolbar>
           <CasinoIcon className={classes.icon} />
-          <Typography variant="h6" style={{ flex: 1 }}>
+          <Typography variant="h6" style={{ flex: 1 , paddingLeft: "20px"}}>
             TTop10
           </Typography>
           <Button
