@@ -8,6 +8,7 @@ import {
   Toolbar,
   makeStyles,
 } from "@material-ui/core";
+import Link from 'next/link';
 import CommentForm from "../../components/CommentForm";
 import StarsRating from "../../components/StarsRating";
 import DuplicateListButton from "../../components/DuplicateListButton";
@@ -57,9 +58,11 @@ const ListDetail = ({listData}) => {
       <AppBar position="static">
         <Toolbar>
           <CasinoIcon className={classes.icon} />
+          <Link href="/">
           <Typography variant="h6" style={{ flex: 1 , paddingLeft: "20px"}}>
             TTop10
           </Typography>
+          </Link>
         </Toolbar>
       </AppBar>
       <div className={utilStyles.container}>
