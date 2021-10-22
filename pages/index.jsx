@@ -16,6 +16,7 @@ import { Button } from "@mui/material";
 import Link from "next/link";
 
 import useStyles from "../utils/styles";
+import { auth } from "../utils/firebase";
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -38,8 +39,6 @@ const Home = () => {
   const { isAuthenticated, logOut } = useFirebaseAuth();
   const classes = useStyles();
 
-  const PrintAuth = () => {};
-
   return (
     <>
       <CssBaseline />
@@ -53,9 +52,8 @@ const Home = () => {
             variant="contained"
             color="primary"
             style={{ backgroundColor: "black" }}
-            onClick={PrintAuth}
           >
-            <Link href="/newTopList">
+            <Link href="/list/new">
               <a className={classes.authButton}>Nueva Lista</a>
             </Link>
           </Button>
@@ -86,28 +84,30 @@ const Home = () => {
               juegos, perros, ¡tú dilo! Se bienvenido a esta gran comunidad y
               comparte tus top10 favoritos de toda la vida.
             </Typography>
-            <div className={classes.button}>
-              <Grid container spacing={2} justify="center">
-                <Grid item>
-                  <Button variant="contained" color="primary">
-                    <Link href="auth/login">
-                      <a className={classes.authButton}>Iniciar Sesión</a>
-                    </Link>
-                  </Button>
+            {!isAuthenticated && (
+              <div className={classes.button}>
+                <Grid container spacing={2} justify="center">
+                  <Grid item>
+                    <Button variant="contained" color="primary">
+                      <Link href="auth/login">
+                        <a className={classes.authButton}>Iniciar Sesión</a>
+                      </Link>
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      style={{ backgroundColor: "white" }}
+                    >
+                      <Link href="auth/register">
+                        <a className={classes.registerButton}>Registrarme</a>
+                      </Link>
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    style={{ backgroundColor: "white" }}
-                  >
-                    <Link href="auth/register">
-                      <a className={classes.registerButton}>Registrarme</a>
-                    </Link>
-                  </Button>
-                </Grid>
-              </Grid>
-            </div>
+              </div>
+            )}
           </Container>
         </div>
         <div>
