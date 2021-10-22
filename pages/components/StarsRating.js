@@ -8,7 +8,7 @@ const ratingChanged = {
   color: "black",
   activeColor: "gold",
   onChange: (newValue) => {
-    console.log(`Example 3: new value is ${newValue}`);
+    console.log(`nuevo valor es ${newValue}`);
   },
 };
 
