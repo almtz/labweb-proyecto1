@@ -3,17 +3,28 @@ import { collection, addDoc, getFirestore } from "firebase/firestore";
 
 export default function handler(req, res) {
 
-    const db = getFirestore();
+  const[
+    tierListName,
+    variantsInfo,
+  ]= Objects.values(req.body);
 
-    console.log(req.body.name);
-    console.log(req.body.info);
-    console.log(req.body.desc);
+  const variants = new Array();
 
-    const docRef = addDoc(collection(db, "testLists"), {
-        name: req.body.name,
-        info: req.body.info,
-        desc: req.body.desc, 
-      });
+  variantsInfo.forEach((item) => {
+    variants.push(JSON.parse(item));
+  });
+
+    // const db = getFirestore();
+
+    // console.log(req.body.name);
+    // console.log(req.body.info);
+    // console.log(req.body.desc);
+
+    // const docRef = addDoc(collection(db, "testLists"), {
+    //     name: req.body.name,
+    //     info: req.body.info,
+    //     desc: req.body.desc, 
+    //   });
 
     res.status(200).json({ msg: 'Success' })
 }

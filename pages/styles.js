@@ -2,6 +2,7 @@ import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   container: {
+    backgroundImage: "url(/images/moviesWallpaper.jpg)",
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(8, 0, 6),
   },
@@ -28,6 +29,17 @@ const useStyles = makeStyles((theme) => ({
   footer: {
     backgroundColor: theme.palette.background.paper,
     padding: "50px 0",
+  },
+  authButton:{
+    textDecoration: "none",
+    color: "white",
+  },
+  registerButton:{
+    textDecoration: "none",
+    color: theme.palette.secondary,
+  },
+  landingText:{
+    color: "white",
   },
 }));
 
