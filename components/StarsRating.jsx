@@ -15,7 +15,6 @@ const ratingChanged = {
 export default function StarsRating() {
   return (
     <div>
-      <h4>Full stars rating only, a11y and other colors</h4>
       <ReactStars {...ratingChanged} />
     </div>
   );
