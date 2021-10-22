@@ -1,7 +1,12 @@
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+} from "@firebase/auth";
 import { auth } from "../utils/firebase";
 
 export const AuthServices = {
+  // Google OAuth login method
   logInWithGoogle: async () => {
     const provider = new GoogleAuthProvider();
 
@@ -34,6 +39,7 @@ export const AuthServices = {
       });
   },
 
+  // Email and password logIn method requires an account creation previously
   logInWithEmail: async (email, password) => {
     await signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -41,12 +47,16 @@ export const AuthServices = {
         const user = userCredential.user;
         console.log(user);
         // ...
+        return {
+          user: user,
+        };
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
       });
   },
+  // Log out method
   logOut: async () => {
     await auth.signOut();
   },
