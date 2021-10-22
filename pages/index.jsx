@@ -108,11 +108,12 @@ const Home = ({ listItems }) => {
             <Grid container spacing={4}>
               {isAuthenticated
                 ? listItems.map((item, index) => {
-                    return (
+                    if (
                       item.visibility === visibilityEnum.publica ||
-                      item.creator.uid ===
-                        user.uid(<ListElementCard key={index} element={item} />)
-                    );
+                      item.creator.id === user.uid
+                    ) {
+                      return <ListElementCard key={index} element={item} />;
+                    }
                   })
                 : listItems.map((item, index) => {
                     return (
