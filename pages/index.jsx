@@ -20,21 +20,6 @@ import { auth } from "../utils/firebase";
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-// export function getServerSideProps(){
-
-//   const auth = getAuth();
-//   let loggedState = false;
-//   console.log("Important info! - " + auth.currentUser);
-//   if(auth.currentUser != null){
-//     loggedState = true;
-//   }
-//   return {
-//     props: {
-//       loggedState
-//     }
-//   }
-// }
-
 const Home = () => {
   const { isAuthenticated, logOut } = useFirebaseAuth();
   const classes = useStyles();
@@ -45,7 +30,7 @@ const Home = () => {
       <AppBar position="static">
         <Toolbar>
           <CasinoIcon className={classes.icon} />
-          <Typography variant="h6" style={{ flex: 1 }}>
+          <Typography variant="h6" style={{ flex: 1 , paddingLeft: "20px"}}>
             TTop10
           </Typography>
           <Button
