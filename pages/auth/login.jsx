@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { auth } from "../../utils/firebase";
 import { useFirebaseAuth } from "../../context/AuthContext";
 import {
   Grid,
@@ -57,7 +58,7 @@ const LogIn = () => {
     password: "",
   });
 
-  const { user, logInWithGoogle, logInWithEmailAndPassword } =
+  const { logInWithGoogle, logInWithEmailAndPassword, isAuthenticated } =
     useFirebaseAuth();
 
   const handleChange = (e) => {
@@ -67,25 +68,12 @@ const LogIn = () => {
   };
 
   const handleSubmit = async () => {
-    const auth = getAuth();
-    await signInWithEmailAndPassword(auth, form.email, form.password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log(user);
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
+    await logInWithEmailAndPassword(form.email, form.password);
   };
 
   useEffect(() => {
-    if (user) {
-      router.push("/");
-    }
-  }, [user, router]);
+    if (isAuthenticated) router.push("/");
+  }, [isAuthenticated, router]);
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -140,7 +128,6 @@ const LogIn = () => {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs></Grid>
               <Grid item>
                 <Link href="/auth/register" variant="body2">
                   {"Don't have an account? Sign Up"}

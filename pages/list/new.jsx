@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { doc, setDoc } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { addDoc, collection } from "firebase/firestore";
 import { firestore } from "../../utils/firebase";
 import {
   Button,
@@ -12,6 +12,7 @@ import {
 } from "@material-ui/core";
 import "@fontsource/roboto/400.css";
 import NewItemForm from "../../components/NewItemForm";
+import { useFirebaseAuth } from "../../context/AuthContext";
 
 const New = () => {
   const useStyles = makeStyles((theme) => ({
@@ -34,6 +35,7 @@ const New = () => {
     },
   }));
   const classes = useStyles();
+  const { user } = useFirebaseAuth();
 
   const [tierListName, setTierListName] = useState("");
   const [variantInfoArray] = useState([]);
@@ -60,7 +62,11 @@ const New = () => {
     setSubmitStatus(true);
     setButtonDisabled(true);
 
-    await setDoc(doc(firestore, "TierLists"), {
+    await addDoc(collection(firestore, "TierLists"), {
+      creator: {
+        uid: user.uid,
+        username: user.displayName,
+      },
       name: tierListName,
       items: variantInfoArray,
       rating: 0,
