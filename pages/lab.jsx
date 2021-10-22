@@ -12,7 +12,7 @@ const Lab = () => {
         <Typography>
             Este es el lab
         </Typography>
-        <DuplicateListButton listId={"pffVK6683Jdhrh3FCXSz"}></DuplicateListButton>
+        <DuplicateListButton listId={"QMsaSYyTGvTRqZWoMBm5"}></DuplicateListButton>
         </>
     )
 }

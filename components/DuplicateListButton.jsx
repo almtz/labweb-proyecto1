@@ -2,10 +2,12 @@ import { doc, addDoc, getDoc, collection } from "firebase/firestore";
 import { firestore } from "../utils/firebase";
 import { Button } from "@mui/material";
 import useStyles from "../utils/styles";
+import { useFirebaseAuth } from "../context/AuthContext";
 
 const DuplicateListButton = ({listId}) => {
 
     const classes = useStyles();
+    const { user } = useFirebaseAuth();
 
     const CopyList = async () => {
 
@@ -19,11 +21,14 @@ const DuplicateListButton = ({listId}) => {
             console.log(docData.data());
 
             await addDoc(collection(firestore, "TierLists"), {
-                creator: docData.data().creator,
+                creator: {
+                    uid: user.uid,
+                    username: user.displayName,
+                  },
                 items: docData.data().items,
                 name: docData.data().name + " (copy)",
-                rating: docData.data().rating,
-                visibility: docData.data().visibility,
+                rating: 0,
+                visibility: "public",
             });
 
             console.log("List duplicated succesfully");
