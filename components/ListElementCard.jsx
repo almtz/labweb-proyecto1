@@ -31,7 +31,7 @@ const ListElementCard = (props) => {
           <Button size="small" color="primary">
             Ver
           </Button>
-          <Link href={`/list/detail?lid=${props.id}`}>
+          <Link href={`/list/detail?lid=${props.id}`} passHref>
             <Button size="small" color="primary">
               Editar
             </Button>
