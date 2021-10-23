@@ -1,16 +1,19 @@
 import { Button, Snackbar } from "@material-ui/core";
-import { deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc, FieldValue } from "firebase/firestore";
 import { firestore } from "../utils/firebase";
 import { useFirebaseAuth } from "../context/AuthContext";
 import { useState } from "react";
+import { useRouter } from "next/dist/client/router";
 
 const DeleteButton = (props) => {
+  const router = useRouter();
   const { user, isAuthenticated } = useFirebaseAuth();
   const [open, setOpen] = useState(false);
 
   const deleteTierList = async () => {
-    if (user.uid === props.list.creator.id) {
-      await deleteDoc(doc(firestore, "TierLists", props.list.id));
+    if (user.uid === props.list.creator.uid) {
+      await deleteDoc(doc(firestore, "TierLists", props.id));
+      router.push("/");
     } else {
       setOpen(true);
     }
@@ -18,7 +21,7 @@ const DeleteButton = (props) => {
 
   return (
     <>
-      {isAuthenticated && props.creator.uid === user.uid && (
+      {isAuthenticated && props.list.creator.uid === user.uid && (
         <Button variant="contained" color="error" onClick={deleteTierList}>
           Borrar
         </Button>
