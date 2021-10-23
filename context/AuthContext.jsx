@@ -1,4 +1,4 @@
-import { getAuth, onAuthStateChanged } from "@firebase/auth";
+import { auth } from "../utils/firebase";
 import { createContext, useContext, useEffect, useState } from "react";
 import { AuthServices } from "../services/AuthServices";
 import nookies from "nookies";
@@ -8,9 +8,14 @@ export const AuthContext = createContext();
 export const AuthContextProvider = (props) => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const logInWithGoogle = async () => {
     await AuthServices.logInWithGoogle();
+  };
+
+  const logInWithEmailAndPassword = async (email, pass) => {
+    await AuthServices.logInWithEmail(email, pass);
   };
 
   const logOut = async () => {
@@ -20,32 +25,28 @@ export const AuthContextProvider = (props) => {
 
   // Listens for the changed in auth token from firebase
   useEffect(() => {
-    return getAuth().onIdTokenChanged(async (user) => {
+    return auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user);
+        setIsAuthenticated(true);
+      }
       if (!user) {
         setUser(null);
-        nookies.set(undefined, "token", "", { path: "/" });
-      } else {
-        const token = await user.getIdToken();
-        setUser(user);
-        nookies.set(undefined, "token", token, { path: "/" });
+        setIsAuthenticated(false);
       }
     });
-  }, []);
-
-  // Force the refresh of the token cookie depending on firebase session refresh
-  useEffect(() => {
-    const handle = setInterval(async () => {
-      const user = getAuth().currentUser;
-      if (user) await user.getIdToken(true);
-    }, 10 * 60 * 1000);
-
-    // clean up setInterval
-    return () => clearInterval(handle);
-  }, []);
+  }, [user]);
 
   return (
     <AuthContext.Provider
-      value={{ user, error, logInWithGoogle, logOut }}
+      value={{
+        user,
+        error,
+        isAuthenticated,
+        logInWithGoogle,
+        logInWithEmailAndPassword,
+        logOut,
+      }}
       {...props}
     />
   );
@@ -53,5 +54,5 @@ export const AuthContextProvider = (props) => {
 
 export const useFirebaseAuth = () => {
   const auth = useContext(AuthContext);
-  return { ...auth, isAuthenticated: auth.user != undefined };
+  return { ...auth };
 };

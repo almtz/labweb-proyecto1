@@ -1,26 +1,18 @@
 import "../scss/main.scss";
-import { firebaseInit } from "../utils/firebase";
+import { app } from "../utils/firebase";
 import Head from "next/head";
-import { AuthContextProvider } from "../contexts/AuthContext";
+import { AuthContextProvider } from "../context/AuthContext";
 
-firebaseInit();
+app;
 
 const MyApp = ({ Component, pageProps }) => {
   return (
     <>
       <Head>
-        <title>Lab Web Proyecto 1</title>
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-        />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/icon?family=Material+Icons"
-        />
+        <title> Labweb Project 1 </title>
       </Head>
       <AuthContextProvider>
-        <Component {...pageProps} />;
+        <Component {...pageProps} />
       </AuthContextProvider>
     </>
   );

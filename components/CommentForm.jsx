@@ -1,4 +1,7 @@
-function CommentForm({ text, setText, onSubmit }) {
+import { useState } from "react";
+
+function CommentForm(onSubmit) {
+  const [text, setText] = useState();
   return (
     <form onSubmit={onSubmit}>
       <textarea
