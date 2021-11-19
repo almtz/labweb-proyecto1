@@ -3,11 +3,7 @@ import {
   AppBar,
   Container,
   CssBaseline,
-  FormControl,
   Grid,
-  InputLabel,
-  MenuItem,
-  Select,
   Toolbar,
   Typography,
 } from "@material-ui/core";
@@ -20,12 +16,8 @@ import { collection, getDocs } from "firebase/firestore";
 import useStyles from "../utils/styles";
 import ListElementCard from "../components/ListElementCard";
 import visibilityEnum from "../utils/visibilityEnum";
-import { useState } from "react";
 
 const Home = ({ listItems }) => {
-  const [filter, setFilter] = useState("");
-  const [order, setOrder] = useState(1);
-
   const { user, isAuthenticated, logOut } = useFirebaseAuth();
   const classes = useStyles();
 
@@ -38,15 +30,28 @@ const Home = ({ listItems }) => {
           <Typography variant="h6" style={{ flex: 1, paddingLeft: "20px" }}>
             TTop10
           </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ backgroundColor: "black" }}
-          >
-            <Link href="/list/new">
-              <a className={classes.authButton}>Nueva Lista</a>
-            </Link>
-          </Button>
+          {isAuthenticated && user !== null && (
+            <>
+              <Button
+                variant="outlined"
+                color="primary"
+                style={{ backgroundColor: "black", marginRight: "10px" }}
+              >
+                <Link href="/list/new">
+                  <a className={classes.authButton}>Nueva Lista</a>
+                </Link>
+              </Button>
+              <Button
+                variant="oulined"
+                color="primary"
+                style={{ backgroundColor: "black" }}
+              >
+                <Link href={`/user/${user.uid}`}>
+                  <a className={classes.authButton}>Mi Perfil</a>
+                </Link>
+              </Button>
+            </>
+          )}
         </Toolbar>
       </AppBar>
       <main>
@@ -79,7 +84,7 @@ const Home = ({ listItems }) => {
                 <Grid container spacing={2} justify="center">
                   <Grid item>
                     <Button variant="contained" color="primary">
-                      <Link href="auth/login">
+                      <Link href="/auth/login">
                         <a className={classes.authButton}>Iniciar Sesión</a>
                       </Link>
                     </Button>
@@ -107,44 +112,14 @@ const Home = ({ listItems }) => {
             style={{ marginTop: "30px" }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={6} alignItems={"center"}>
+              <Grid item xs={6}>
                 <Typography variant="h5" paragraph>
                   ¡Checa las listas más populares!
                 </Typography>
               </Grid>
-              <Grid item xs={6} justify="flex-end">
-                <FormControl variant="outlined">
-                  <InputLabel id="filter-select-label">Filtro</InputLabel>
-                  <Select
-                    autoWidth
-                    labelId="filter-select-label"
-                    id="filter-select"
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value)}
-                    label="Filtro"
-                  >
-                    <MenuItem value={10}>Fecha de Creación</MenuItem>
-                    <MenuItem value={20}>Rating</MenuItem>
-                  </Select>
-                </FormControl>
-                <FormControl variant="outlined">
-                  <InputLabel id="filter-select-label">Orden</InputLabel>
-                  <Select
-                    autoWidth
-                    labelId="filter-select-label"
-                    id="filter-select"
-                    value={order}
-                    onChange={(e) => setOrder(e.target.value)}
-                    label="Filtro"
-                  >
-                    <MenuItem value={1}>Ascendente</MenuItem>
-                    <MenuItem value={2}>Descendente</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
             </Grid>
             <Grid container spacing={4}>
-              {isAuthenticated
+              {isAuthenticated && user !== null
                 ? listItems.map((item, index) => {
                     if (
                       item.data.visibility === visibilityEnum.publica ||
@@ -183,7 +158,7 @@ const Home = ({ listItems }) => {
         </Typography>
         {isAuthenticated && (
           <Grid>
-            <Grid container spacing={1} justify="center">
+            <Grid container spacing={1} justifyContent="center">
               <Button onClick={logOut} variant="outlined" color="primary">
                 Log Out
               </Button>
