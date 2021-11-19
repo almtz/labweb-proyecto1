@@ -31,7 +31,7 @@ const Home = ({ listItems }) => {
       <AppBar position="static">
         <Toolbar>
           <CasinoIcon className={classes.icon} />
-          <Typography variant="h6" style={{ flex: 1 , paddingLeft: "20px"}}>
+          <Typography variant="h6" style={{ flex: 1, paddingLeft: "20px" }}>
             TTop10
           </Typography>
           <Button
@@ -109,16 +109,26 @@ const Home = ({ listItems }) => {
               {isAuthenticated
                 ? listItems.map((item, index) => {
                     if (
-                      item.visibility === visibilityEnum.publica ||
-                      item.creator.uid === user.uid
+                      item.data.visibility === visibilityEnum.publica ||
+                      item.data.creator.uid === user.uid
                     ) {
-                      return <ListElementCard key={index} element={item} />;
+                      return (
+                        <ListElementCard
+                          key={index}
+                          element={item.data}
+                          id={item.id}
+                        />
+                      );
                     }
                   })
                 : listItems.map((item, index) => {
                     return (
-                      item.visibility === visibilityEnum.publica && (
-                        <ListElementCard key={index} element={item} />
+                      item.data.visibility === visibilityEnum.publica && (
+                        <ListElementCard
+                          key={index}
+                          element={item.data}
+                          id={item.id}
+                        />
                       )
                     );
                   })}
@@ -151,7 +161,7 @@ export const getServerSideProps = async () => {
   const listItems = [];
   const querySnapShot = await getDocs(collection(firestore, "TierLists"));
   querySnapShot.forEach((doc) => {
-    listItems.push(doc.data());
+    listItems.push({ id: doc.id, data: doc.data() });
   });
 
   return {

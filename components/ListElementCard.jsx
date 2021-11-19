@@ -8,6 +8,7 @@ import {
 } from "@material-ui/core";
 import { Button } from "@mui/material";
 import useStyles from "../utils/styles";
+import Link from "next/link";
 
 const ListElementCard = (props) => {
   const classes = useStyles();
@@ -30,9 +31,11 @@ const ListElementCard = (props) => {
           <Button size="small" color="primary">
             Ver
           </Button>
-          <Button size="small" color="primary">
-            Editar
-          </Button>
+          <Link href={`/list/detail?lid=${props.id}`} passHref>
+            <Button size="small" color="primary">
+              Editar
+            </Button>
+          </Link>
         </CardActions>
       </Card>
     </Grid>
