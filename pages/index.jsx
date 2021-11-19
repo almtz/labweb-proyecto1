@@ -1,36 +1,40 @@
-import { useFirebaseAuth } from "../context/AuthContext";
+import {useFirebaseAuth} from "../context/AuthContext";
 import {
-  Typography,
   AppBar,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  CssBaseline,
-  Grid,
-  Toolbar,
   Container,
+  CssBaseline,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  Toolbar,
+  Typography,
 } from "@material-ui/core";
 import CasinoIcon from "@mui/icons-material/Casino";
-import { Button } from "@mui/material";
+import {Button} from "@mui/material";
 import Link from "next/link";
-import { firestore } from "../utils/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import {firestore} from "../utils/firebase";
+import {collection, getDocs} from "firebase/firestore";
 
 import useStyles from "../utils/styles";
 import ListElementCard from "../components/ListElementCard";
 import visibilityEnum from "../utils/visibilityEnum";
+import {useState} from "react";
 
-const Home = ({ listItems }) => {
-  const { user, isAuthenticated, logOut } = useFirebaseAuth();
+const Home = ({listItems}) => {
+  const [filter, setFilter] = useState("");
+  const [order, setOrder] = useState(1);
+
+  const {user, isAuthenticated, logOut} = useFirebaseAuth();
   const classes = useStyles();
 
   return (
-    <>
-      <CssBaseline />
-      <AppBar position="static">
-        <Toolbar>
-          <CasinoIcon className={classes.icon} />
+      <>
+        <CssBaseline/>
+        <AppBar position="static">
+          <Toolbar>
+            <CasinoIcon className={classes.icon}/>
           <Typography variant="h6" style={{ flex: 1, paddingLeft: "20px" }}>
             TTop10
           </Typography>
@@ -98,23 +102,57 @@ const Home = ({ listItems }) => {
         </div>
         <div>
           <Container
-            className={classes.cardGrid}
-            maxWidth="md"
-            style={{ marginTop: "30px" }}
+              className={classes.cardGrid}
+              maxWidth="md"
+              style={{marginTop: "30px"}}
           >
-            <Typography variant="h5" align="center" paragraph>
-              ¡Checa las listas más populares!
-            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={6} alignItems={"center"}>
+                <Typography variant="h5" paragraph>
+                  ¡Checa las listas más populares!
+                </Typography>
+              </Grid>
+              <Grid item xs={6} justify="flex-end">
+                <FormControl variant="outlined">
+                  <InputLabel id="filter-select-label">Filtro</InputLabel>
+                  <Select
+                      autoWidth
+                      labelId="filter-select-label"
+                      id="filter-select"
+                      value={filter}
+                      onChange={(e) => setFilter(e.target.value)}
+                      label="Filtro"
+                  >
+                    <MenuItem value={10}>Fecha de Creación</MenuItem>
+                    <MenuItem value={20}>Rating</MenuItem>
+                  </Select>
+                </FormControl>
+                <FormControl variant="outlined">
+                  <InputLabel id="filter-select-label">Orden</InputLabel>
+                  <Select
+                      autoWidth
+                      labelId="filter-select-label"
+                      id="filter-select"
+                      value={order}
+                      onChange={(e) => setOrder(e.target.value)}
+                      label="Filtro"
+                  >
+                    <MenuItem value={1}>Ascendente</MenuItem>
+                    <MenuItem value={2}>Descendente</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
             <Grid container spacing={4}>
               {isAuthenticated
-                ? listItems.map((item, index) => {
+                  ? listItems.map((item, index) => {
                     if (
-                      item.data.visibility === visibilityEnum.publica ||
-                      item.data.creator.uid === user.uid
+                        item.data.visibility === visibilityEnum.publica ||
+                        item.data.creator.uid === user.uid
                     ) {
                       return (
-                        <ListElementCard
-                          key={index}
+                          <ListElementCard
+                              key={index}
                           element={item.data}
                           id={item.id}
                         />
