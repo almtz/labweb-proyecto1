@@ -45,16 +45,16 @@ const Home = ({listItems}) => {
             >
               <Link href="/list/new">
                 <a className={classes.authButton}>Nueva Lista</a>
-            </Link>
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <main>
-        <div className={classes.container}>
-          <Container
-            maxWidth="sm"
-            style={{ marginTop: "100px", marginBottom: "40px" }}
-          >
+              </Link>
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <main>
+          <div className={classes.container}>
+            <Container
+                maxWidth="sm"
+                style={{marginTop: "100px", marginBottom: "40px"}}
+            >
             <Typography
               variant="h3"
               align="center"
