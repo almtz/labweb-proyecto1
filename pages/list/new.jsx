@@ -1,11 +1,19 @@
-import {useState} from "react";
-import {useRouter} from "next/dist/client/router";
-import {addDoc, collection} from "firebase/firestore";
-import {firestore} from "../../utils/firebase";
-import {Button, FormControl, Grid, makeStyles, Paper, TextField, Typography,} from "@material-ui/core";
+import { useState } from "react";
+import { useRouter } from "next/dist/client/router";
+import { addDoc, collection } from "firebase/firestore";
+import { firestore } from "../../utils/firebase";
+import {
+  Button,
+  FormControl,
+  Grid,
+  makeStyles,
+  Paper,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import "@fontsource/roboto/400.css";
 import NewItemForm from "../../components/NewItemForm";
-import {useFirebaseAuth} from "../../context/AuthContext";
+import { useFirebaseAuth } from "../../context/AuthContext";
 
 const New = () => {
   const useStyles = makeStyles((theme) => ({
@@ -137,18 +145,18 @@ const New = () => {
           </Grid>
           <Grid item xs={12}>
             <Button
-                color="secondary"
-                type="button"
-                onClick={(e) => handleVariants(e, "remove")}
+              color="secondary"
+              type="button"
+              onClick={(e) => handleVariants(e, "remove")}
             >
               Remover último elemento
             </Button>
           </Grid>
           <Button
-              disabled={buttonState}
-              onClick={submitNewList}
-              variant="contained"
-              color="primary"
+            disabled={buttonState}
+            onClick={submitNewList}
+            variant="contained"
+            color="primary"
           >
             Submit
           </Button>

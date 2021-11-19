@@ -1,4 +1,4 @@
-import {useFirebaseAuth} from "../context/AuthContext";
+import { useFirebaseAuth } from "../context/AuthContext";
 import {
   AppBar,
   Container,
@@ -12,59 +12,59 @@ import {
   Typography,
 } from "@material-ui/core";
 import CasinoIcon from "@mui/icons-material/Casino";
-import {Button} from "@mui/material";
+import { Button } from "@mui/material";
 import Link from "next/link";
-import {firestore} from "../utils/firebase";
-import {collection, getDocs} from "firebase/firestore";
+import { firestore } from "../utils/firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 import useStyles from "../utils/styles";
 import ListElementCard from "../components/ListElementCard";
 import visibilityEnum from "../utils/visibilityEnum";
-import {useState} from "react";
+import { useState } from "react";
 
-const Home = ({listItems}) => {
+const Home = ({ listItems }) => {
   const [filter, setFilter] = useState("");
   const [order, setOrder] = useState(1);
 
-  const {user, isAuthenticated, logOut} = useFirebaseAuth();
+  const { user, isAuthenticated, logOut } = useFirebaseAuth();
   const classes = useStyles();
 
   return (
-      <>
-        <CssBaseline/>
-        <AppBar position="static">
-          <Toolbar>
-            <CasinoIcon className={classes.icon}/>
-            <Typography variant="h6" style={{flex: 1, paddingLeft: "20px"}}>
-              TTop10
+    <>
+      <CssBaseline />
+      <AppBar position="static">
+        <Toolbar>
+          <CasinoIcon className={classes.icon} />
+          <Typography variant="h6" style={{ flex: 1, paddingLeft: "20px" }}>
+            TTop10
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ backgroundColor: "black" }}
+          >
+            <Link href="/list/new">
+              <a className={classes.authButton}>Nueva Lista</a>
+            </Link>
+          </Button>
+        </Toolbar>
+      </AppBar>
+      <main>
+        <div className={classes.container}>
+          <Container
+            maxWidth="sm"
+            style={{ marginTop: "100px", marginBottom: "40px" }}
+          >
+            <Typography
+              variant="h3"
+              align="center"
+              className={classes.landingText}
+              gutterBottom
+            >
+              Trascendiendo Top 10
             </Typography>
-            <Button
-                variant="contained"
-                color="primary"
-                style={{backgroundColor: "black"}}
-            >
-              <Link href="/list/new">
-                <a className={classes.authButton}>Nueva Lista</a>
-              </Link>
-            </Button>
-          </Toolbar>
-        </AppBar>
-        <main>
-          <div className={classes.container}>
-            <Container
-                maxWidth="sm"
-                style={{marginTop: "100px", marginBottom: "40px"}}
-            >
-              <Typography
-                  variant="h3"
-                  align="center"
-                  className={classes.landingText}
-                  gutterBottom
-              >
-                Trascendiendo Top 10
-              </Typography>
-              <Typography
-                  variant="h5"
+            <Typography
+              variant="h5"
               align="justify"
               className={classes.landingText}
               paragraph
@@ -102,9 +102,9 @@ const Home = ({listItems}) => {
         </div>
         <div>
           <Container
-              className={classes.cardGrid}
-              maxWidth="md"
-              style={{marginTop: "30px"}}
+            className={classes.cardGrid}
+            maxWidth="md"
+            style={{ marginTop: "30px" }}
           >
             <Grid container spacing={2}>
               <Grid item xs={6} alignItems={"center"}>
@@ -116,12 +116,12 @@ const Home = ({listItems}) => {
                 <FormControl variant="outlined">
                   <InputLabel id="filter-select-label">Filtro</InputLabel>
                   <Select
-                      autoWidth
-                      labelId="filter-select-label"
-                      id="filter-select"
-                      value={filter}
-                      onChange={(e) => setFilter(e.target.value)}
-                      label="Filtro"
+                    autoWidth
+                    labelId="filter-select-label"
+                    id="filter-select"
+                    value={filter}
+                    onChange={(e) => setFilter(e.target.value)}
+                    label="Filtro"
                   >
                     <MenuItem value={10}>Fecha de Creación</MenuItem>
                     <MenuItem value={20}>Rating</MenuItem>
@@ -130,12 +130,12 @@ const Home = ({listItems}) => {
                 <FormControl variant="outlined">
                   <InputLabel id="filter-select-label">Orden</InputLabel>
                   <Select
-                      autoWidth
-                      labelId="filter-select-label"
-                      id="filter-select"
-                      value={order}
-                      onChange={(e) => setOrder(e.target.value)}
-                      label="Filtro"
+                    autoWidth
+                    labelId="filter-select-label"
+                    id="filter-select"
+                    value={order}
+                    onChange={(e) => setOrder(e.target.value)}
+                    label="Filtro"
                   >
                     <MenuItem value={1}>Ascendente</MenuItem>
                     <MenuItem value={2}>Descendente</MenuItem>
@@ -145,17 +145,17 @@ const Home = ({listItems}) => {
             </Grid>
             <Grid container spacing={4}>
               {isAuthenticated
-                  ? listItems.map((item, index) => {
+                ? listItems.map((item, index) => {
                     if (
-                        item.data.visibility === visibilityEnum.publica ||
-                        item.data.creator.uid === user.uid
+                      item.data.visibility === visibilityEnum.publica ||
+                      item.data.creator.uid === user.uid
                     ) {
                       return (
-                          <ListElementCard
-                              key={index}
-                              element={item.data}
-                              id={item.id}
-                          />
+                        <ListElementCard
+                          key={index}
+                          element={item.data}
+                          id={item.id}
+                        />
                       );
                     }
                   })
