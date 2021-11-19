@@ -55,16 +55,16 @@ const Home = ({listItems}) => {
                 maxWidth="sm"
                 style={{marginTop: "100px", marginBottom: "40px"}}
             >
-            <Typography
-              variant="h3"
-              align="center"
-              className={classes.landingText}
-              gutterBottom
-            >
-              Trascendiendo Top 10
-            </Typography>
-            <Typography
-              variant="h5"
+              <Typography
+                  variant="h3"
+                  align="center"
+                  className={classes.landingText}
+                  gutterBottom
+              >
+                Trascendiendo Top 10
+              </Typography>
+              <Typography
+                  variant="h5"
               align="justify"
               className={classes.landingText}
               paragraph
