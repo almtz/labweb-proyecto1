@@ -35,16 +35,16 @@ const Home = ({listItems}) => {
         <AppBar position="static">
           <Toolbar>
             <CasinoIcon className={classes.icon}/>
-          <Typography variant="h6" style={{ flex: 1, paddingLeft: "20px" }}>
-            TTop10
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ backgroundColor: "black" }}
-          >
-            <Link href="/list/new">
-              <a className={classes.authButton}>Nueva Lista</a>
+            <Typography variant="h6" style={{flex: 1, paddingLeft: "20px"}}>
+              TTop10
+            </Typography>
+            <Button
+                variant="contained"
+                color="primary"
+                style={{backgroundColor: "black"}}
+            >
+              <Link href="/list/new">
+                <a className={classes.authButton}>Nueva Lista</a>
             </Link>
           </Button>
         </Toolbar>
@@ -153,9 +153,9 @@ const Home = ({listItems}) => {
                       return (
                           <ListElementCard
                               key={index}
-                          element={item.data}
-                          id={item.id}
-                        />
+                              element={item.data}
+                              id={item.id}
+                          />
                       );
                     }
                   })
