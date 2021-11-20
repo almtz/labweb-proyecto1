@@ -87,14 +87,8 @@ const ListDetail = ({ listData, listId }) => {
               <Typography variant="h4" className={classes.padding1px}>
                 {index + 1} - {item.name}
               </Typography>
-
-              <Image
-                src="/images/tierListimgPlaceholder.jpg" // Route of the image file
-                height={200} // Desired size with correct aspect ratio
-                width={320} // Desired size with correct aspect ratio
-                alt="List element image placeholder"
-                style={{ float: "left", display: "block" }}
-              />
+              
+              <img src={item.picture} style={{maxHeight: "256px", maxWidth: "256px", float: "left", display: "block"}}></img>
 
               <Typography variant="body1" style={{ marginBottom: "20px" }}>
                 {item.desc}
