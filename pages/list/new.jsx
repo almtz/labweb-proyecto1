@@ -1,18 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/dist/client/router";
 import { addDoc, collection } from "firebase/firestore";
 import { firestore } from "../../utils/firebase";
 import {
   Button,
   FormControl,
-  TextField,
   Grid,
-  Paper,
-  Typography,
   makeStyles,
-  InputLabel,
-  MenuItem,
-  Select,
+  Paper,
+  TextField,
+  Typography,
 } from "@material-ui/core";
 import "@fontsource/roboto/400.css";
 import NewItemForm from "../../components/NewItemForm";
@@ -34,7 +31,7 @@ const New = () => {
       alignItems: "center",
     },
     formElement: {
-      margin: "10px",
+      margin: "5px",
       minWidth: "750px",
     },
   }));
@@ -43,16 +40,11 @@ const New = () => {
   const { user } = useFirebaseAuth();
 
   const [tierListName, setTierListName] = useState("");
-  const [category, setCategory] = useState("otros");
   const [variantInfoArray] = useState([]);
   const [submitStatus, setSubmitStatus] = useState(false);
   const [buttonState, setButtonDisabled] = useState(false);
 
   const [variantNumber, setVariants] = useState(1);
-
-  const handleChange = (event) => {
-    setCategory(event.target.value);
-  };
 
   const handleVariantChange = (variantInfo) => {
     variantInfoArray.push(variantInfo);
@@ -75,9 +67,11 @@ const New = () => {
       name: tierListName,
       items: variantInfoArray,
       rating: 0,
-      visibility: "public",
+      visibility: 1,
+      createdOn: Date.now(),
     });
-    router.push("/");
+
+    await router.push("/");
   };
 
   const submitNewList = async (event) => {
@@ -126,32 +120,13 @@ const New = () => {
               value={tierListName}
               onChange={(e) => setTierListName(e.target.value)}
             />
-            </Grid>
-
-            <Grid item xs={12}>
-            <FormControl fullWidth className={classes.formElement}>
-              <InputLabel id="category-select">Elige una Categoría:</InputLabel>
-              <Select
-                labelId="categorySelect"
-                id="category-selector"
-                value={category}
-                label="Category"
-                onChange={handleChange}
-              >
-                <MenuItem value={"peliculas"}>Películas y Series</MenuItem>
-                <MenuItem value={"videojuegos"}>Videojuegos</MenuItem>
-                <MenuItem value={"otros"}>Otros (no imagen)</MenuItem>
-              </Select>
-            </FormControl>
           </Grid>
-
-          <Typography variant="h6" component="div" gutterBottom style={{paddingTop: "5px"}}>
+          <Typography variant="h6" component="div" gutterBottom>
             Lista de Elementos:
           </Typography>
           {/* Variants dynamic-recursive form extensions. */}
           {[...Array(variantNumber)].map((value, index) => (
             <NewItemForm
-              category = {category}
               variant_id={index + 1}
               key={index}
               sendToParent={handleVariantChange}
