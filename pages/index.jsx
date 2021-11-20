@@ -179,7 +179,7 @@ const Home = ({ listItems }) => {
                     autoWidth
                   >
                     <MenuItem value={"rating"}>Rating</MenuItem>
-                    <MenuItem value={"date"}>Creation</MenuItem>
+                    <MenuItem value={"createdOn"}>Creation</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
