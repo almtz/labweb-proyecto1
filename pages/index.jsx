@@ -117,6 +117,7 @@ const Home = ({ listItems }) => {
                           key={index}
                           element={item.data}
                           id={item.id}
+                          rating={item.rating}
                         />
                       );
                     }

@@ -9,6 +9,7 @@ import {
 import { Button } from "@mui/material";
 import useStyles from "../utils/styles";
 import Link from "next/link";
+import StarsRating from "./StarsRating";
 
 const ListElementCard = (props) => {
   const classes = useStyles();
@@ -27,6 +28,8 @@ const ListElementCard = (props) => {
           </Typography>
           <Typography>{props.element.creator.username}</Typography>
         </CardContent>
+
+        <StarsRating value={props.rating} />
         <CardActions>
           <Button size="small" color="primary">
             Ver

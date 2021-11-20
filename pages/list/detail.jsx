@@ -18,6 +18,7 @@ import CasinoIcon from "@mui/icons-material/Casino";
 import utilStyles from "../../styles/utils.module.css";
 import { useFirebaseAuth } from "../../context/AuthContext";
 import ChangeVisibility from "../../components/ChangeVisibility";
+import ModifyButton from "../../components/ModifyButton";
 
 export async function getServerSideProps({ query }) {
   let lid = "";
@@ -105,6 +106,7 @@ const ListDetail = ({ listData, listId }) => {
 
         {isAuthenticated && <DuplicateListButton listId={listId} />}
         <DeleteButton list={listData} id={listId} />
+        <ModifyButton list={listData} id={listId} />
         <CommentForm />
       </div>
     </>

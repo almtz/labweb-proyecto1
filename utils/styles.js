@@ -30,15 +30,15 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: "50px 0",
   },
-  authButton:{
+  authButton: {
     textDecoration: "none",
     color: "white",
   },
-  registerButton:{
+  registerButton: {
     textDecoration: "none",
     color: theme.palette.secondary,
   },
-  landingText:{
+  landingText: {
     color: "white",
   },
 }));
