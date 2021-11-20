@@ -13,9 +13,10 @@ export default function StarsRating(props) {
     },
     value: props.value,
   };
+
   return (
     <div>
-      <ReactStars {...ratingChanged} />
+      <ReactStars size={"40"} count={"5"} isHalf value={props.value} />
     </div>
   );
 }
