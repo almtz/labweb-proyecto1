@@ -3,23 +3,74 @@ import {
   AppBar,
   Container,
   CssBaseline,
+  FormControl,
   Grid,
+  InputLabel,
+  MenuItem,
+  Select,
   Toolbar,
   Typography,
 } from "@material-ui/core";
 import CasinoIcon from "@mui/icons-material/Casino";
-import { Button } from "@mui/material";
+import { Button, Pagination } from "@mui/material";
 import Link from "next/link";
 import { firestore } from "../utils/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 
 import useStyles from "../utils/styles";
 import ListElementCard from "../components/ListElementCard";
 import visibilityEnum from "../utils/visibilityEnum";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/dist/client/router";
 
 const Home = ({ listItems }) => {
+  const router = useRouter();
   const { user, isAuthenticated, logOut } = useFirebaseAuth();
   const classes = useStyles();
+
+  const [visibleList, setVisibleLists] = useState([]);
+
+  const [offset] = useState(6);
+  const [totalPages, setTotalPages] = useState();
+  const [itemsPag, setItemPag] = useState([]);
+
+  const [filter, setFilter] = useState();
+
+  useEffect(() => {
+    let tmpArray = [];
+
+    if (isAuthenticated) {
+      tmpArray = listItems.filter(
+        (e) =>
+          e.data.visibility === visibilityEnum.publica ||
+          e.data.creator.uid === user.uid
+      );
+    } else {
+      tmpArray = listItems.filter(
+        (e) => e.data.visibility === visibilityEnum.publica
+      );
+    }
+
+    setTotalPages(Math.ceil(tmpArray.length / offset));
+    setVisibleLists(tmpArray);
+
+    setItemPag(tmpArray.slice(0, 6));
+  }, []);
+
+  const getPagItems = (e, pagNum) => {
+    let endOfList = pagNum * offset;
+    let startOfList = endOfList - offset;
+
+    let tmpArray = visibleList.slice(startOfList, endOfList);
+
+    setItemPag(tmpArray);
+  };
+
+  useEffect(() => {
+    if (router.query.order !== filter) {
+      router.push({ pathname: "/", query: { order: filter } });
+    }
+  }, [filter]);
 
   return (
     <>
@@ -81,7 +132,7 @@ const Home = ({ listItems }) => {
             </Typography>
             {!isAuthenticated && (
               <div className={classes.button}>
-                <Grid container spacing={2} justify="center">
+                <Grid container spacing={2} justifyContent="center">
                   <Grid item>
                     <Button variant="contained" color="primary">
                       <Link href="/auth/login">
@@ -117,34 +168,34 @@ const Home = ({ listItems }) => {
                   ¡Checa las listas más populares!
                 </Typography>
               </Grid>
+              <Grid item xs={6} justifyContent="flex-end">
+                <FormControl variant="outlined">
+                  <InputLabel id={"order-by"}>Order</InputLabel>
+                  <Select
+                    labelId={"order-by"}
+                    value={filter}
+                    label="Order"
+                    onChange={(e) => setFilter(e.target.value)}
+                    autoWidth
+                  >
+                    <MenuItem value={"rating"}>Rating</MenuItem>
+                    <MenuItem value={"date"}>Creation</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
             </Grid>
             <Grid container spacing={4}>
-              {isAuthenticated && user !== null
-                ? listItems.map((item, index) => {
-                    if (
-                      item.data.visibility === visibilityEnum.publica ||
-                      item.data.creator.uid === user.uid
-                    ) {
-                      return (
-                        <ListElementCard
-                          key={index}
-                          element={item.data}
-                          id={item.id}
-                        />
-                      );
-                    }
-                  })
-                : listItems.map((item, index) => {
-                    return (
-                      item.data.visibility === visibilityEnum.publica && (
-                        <ListElementCard
-                          key={index}
-                          element={item.data}
-                          id={item.id}
-                        />
-                      )
-                    );
-                  })}
+              {itemsPag.map((item, index) => (
+                <ListElementCard key={index} element={item.data} id={item.id} />
+              ))}
+            </Grid>
+            <br />
+            <Grid container justifyContent="center">
+              <Pagination
+                count={totalPages}
+                variant="outlined"
+                onChange={getPagItems}
+              />
             </Grid>
           </Container>
         </div>
@@ -159,7 +210,7 @@ const Home = ({ listItems }) => {
         {isAuthenticated && (
           <Grid>
             <Grid container spacing={1} justifyContent="center">
-              <Button onClick={logOut} variant="outlined" color="primary">
+              <Button onClick={logOut} variant="rounded" color="primary">
                 Log Out
               </Button>
             </Grid>
@@ -170,12 +221,23 @@ const Home = ({ listItems }) => {
   );
 };
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (context) => {
   const listItems = [];
-  const querySnapShot = await getDocs(collection(firestore, "TierLists"));
-  querySnapShot.forEach((doc) => {
-    listItems.push({ id: doc.id, data: doc.data() });
-  });
+
+  const docRef = collection(firestore, "TierLists");
+  if (context.query.order) {
+    const querySnapShot = await getDocs(
+      query(docRef, orderBy(context.query.order, "desc"))
+    );
+    querySnapShot.forEach((doc) => {
+      listItems.push({ id: doc.id, data: doc.data() });
+    });
+  } else {
+    const querySnapShot = await getDocs(collection(firestore, "TierLists"));
+    querySnapShot.forEach((doc) => {
+      listItems.push({ id: doc.id, data: doc.data() });
+    });
+  }
 
   return {
     props: { listItems },

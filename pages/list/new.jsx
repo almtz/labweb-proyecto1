@@ -67,8 +67,8 @@ const New = () => {
       name: tierListName,
       items: variantInfoArray,
       rating: 0,
-      visibility: "public",
-      createdOn: new Date(Date.now()).toISOString(),
+      visibility: 1,
+      createdOn: Date.now(),
     });
 
     await router.push("/");
