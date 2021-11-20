@@ -1,21 +1,9 @@
 import ReactStars from "react-rating-stars-component";
 
-const ratingChanged = {
-  size: 40,
-  count: 5,
-  isHalf: true,
-  value: 4,
-  color: "black",
-  activeColor: "gold",
-  onChange: (newValue) => {
-    console.log(`nuevo valor es ${newValue}`);
-  },
-};
-
-export default function StarsRating() {
+export default function StarsRating(props) {
   return (
     <div>
-      <ReactStars {...ratingChanged} />
+      <ReactStars size={"40"} count={"5"} isHalf value={props.value} />
     </div>
   );
 }
