@@ -1,7 +1,6 @@
 import { auth } from "../utils/firebase";
 import { createContext, useContext, useEffect, useState } from "react";
 import { AuthServices } from "../services/AuthServices";
-import nookies from "nookies";
 
 export const AuthContext = createContext();
 

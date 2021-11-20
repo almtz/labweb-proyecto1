@@ -1,21 +1,20 @@
-import { useEffect, useState } from "react";
-import { auth } from "../../utils/firebase";
-import { useFirebaseAuth } from "../../context/AuthContext";
+import {useEffect, useState} from "react";
+import {useFirebaseAuth} from "../../context/AuthContext";
 import {
-  Grid,
   Avatar,
   Button,
-  CssBaseline,
-  TextField,
-  FormControlLabel,
   Checkbox,
+  CssBaseline,
+  FormControlLabel,
+  Grid,
   Link,
-  Paper,
-  Typography,
   makeStyles,
+  Paper,
+  TextField,
+  Typography,
 } from "@material-ui/core";
-import { LockOutlined } from "@material-ui/icons";
-import { useRouter } from "next/dist/client/router";
+import {LockOutlined} from "@material-ui/icons";
+import {useRouter} from "next/dist/client/router";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -140,11 +139,6 @@ const LogIn = () => {
                   Sign In with Google
                 </Button>
               </Grid>
-              {/* <Grid item xs>
-                <Button onClick={logInWithGoogle} className={classes.submit}>
-                  Sign In with [SocialMedia]
-                </Button>
-              </Grid> */}
             </Grid>
           </form>
         </div>

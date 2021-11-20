@@ -56,7 +56,11 @@ const Register = () => {
   const handleSubmit = async () => {
     const auth = getAuth();
     await createUserWithEmailAndPassword(auth, form.email, form.password)
-      .then((user) => {
+      .then((res) => {
+        const user = res.user;
+        user.updateProfile({
+          displayName: `${form.firstName} ${form.lastName}`,
+        });
         router.push("/auth/login");
       })
       .catch((err) => alert(err));
