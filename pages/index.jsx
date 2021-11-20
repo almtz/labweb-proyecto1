@@ -186,7 +186,12 @@ const Home = ({ listItems }) => {
             </Grid>
             <Grid container spacing={4}>
               {itemsPag.map((item, index) => (
-                <ListElementCard key={index} element={item.data} id={item.id} />
+                <ListElementCard
+                  key={index}
+                  element={item.data}
+                  id={item.id}
+                  rating={item.data.rating}
+                />
               ))}
             </Grid>
             <br />
