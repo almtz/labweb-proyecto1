@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/dist/client/router";
-import { addDoc, collection } from "firebase/firestore";
+import { doc, getDoc, updateDoc, collection, addDoc } from "firebase/firestore";
 import { firestore } from "../../utils/firebase";
 import {
   Button,
@@ -14,8 +14,30 @@ import {
 import "@fontsource/roboto/400.css";
 import NewItemForm from "../../components/NewItemForm";
 import { useFirebaseAuth } from "../../context/AuthContext";
+import Link from "next/link";
 
-const New = () => {
+export async function getServerSideProps({ query }) {
+  let lid = "";
+  query.lid ? (lid = query.lid) : (lid = "empty");
+
+  const docRef = doc(firestore, "TierLists", lid);
+  const docData = await getDoc(docRef);
+
+  if (docData.exists()) {
+    return {
+      props: {
+        listData: docData.data(),
+        listId: lid,
+      },
+    };
+  } else {
+    return {
+      notFound,
+    };
+  }
+}
+
+const Modify = ({ listData, listId }) => {
   const useStyles = makeStyles((theme) => ({
     vertical_center: {
       width: "100%",
@@ -37,7 +59,7 @@ const New = () => {
   }));
   const classes = useStyles();
   const router = useRouter();
-  const { user } = useFirebaseAuth();
+  const { user, isAuthenticated } = useFirebaseAuth();
 
   const [tierListName, setTierListName] = useState("");
   const [variantInfoArray] = useState([]);
@@ -59,15 +81,8 @@ const New = () => {
   };
 
   const uploadList = async () => {
-    await addDoc(collection(firestore, "TierLists"), {
-      creator: {
-        uid: user.uid,
-        username: user.displayName,
-      },
+    await updateDoc(collection(firestore, "TierLists"), {
       name: tierListName,
-      items: variantInfoArray,
-      rating: 0,
-      visibility: "public",
     });
     router.push("/");
   };
@@ -78,7 +93,8 @@ const New = () => {
     setSubmitStatus(true);
     setButtonDisabled(true);
 
-    if (variantNumber === variantInfoArray.length) {
+    uploadList();
+    /* if (variantNumber === variantInfoArray.length) {
       uploadList();
     } else {
       setTimeout(function () {
@@ -88,8 +104,19 @@ const New = () => {
           setButtonDisabled(false);
         }
       }, 1200);
-    }
+    }*/
   };
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setVariantInfo({ ...variantInfo, [id]: value });
+  };
+
+  const [variantInfo, setVariantInfo] = useState({
+    name: "",
+    picture: "",
+    desc: "",
+  });
 
   return (
     <Grid
@@ -106,13 +133,13 @@ const New = () => {
         <FormControl className={classes.formElement}>
           <Grid item xs={12}>
             <Typography variant="h4" component="div" gutterBottom>
-              Nueva TopList
+              Modificar TopList
             </Typography>
           </Grid>
           <Grid item xs={12}>
             <TextField
               id="tierListName"
-              label="Tierlist Name"
+              label={listData.name}
               variant="outlined"
               fullWidth="true"
               value={tierListName}
@@ -122,14 +149,39 @@ const New = () => {
           <Typography variant="h6" component="div" gutterBottom>
             Lista de Elementos:
           </Typography>
-          {/* Variants dynamic-recursive form extensions. */}
-          {[...Array(variantNumber)].map((value, index) => (
-            <NewItemForm
-              variant_id={index + 1}
-              key={index}
-              sendToParent={handleVariantChange}
-              submitFlag={submitStatus}
-            />
+
+          {listData.items.map((item, index) => (
+            <>
+              <Typography>Elemento - {index + 1}</Typography>
+              <TextField
+                id="name"
+                label={item.name}
+                variant="outlined"
+                margin="normal"
+                fullWidth="true"
+                value={variantInfo.name}
+                onChange={handleChange}
+              />
+              <TextField
+                id="picture"
+                label={item.picture}
+                variant="outlined"
+                margin="normal"
+                fullWidth="true"
+                value={variantInfo.picture}
+                onChange={handleChange}
+              />
+              <TextField
+                id="desc"
+                label={item.desc}
+                variant="outlined"
+                multiline
+                margin="normal"
+                fullWidth="true"
+                value={variantInfo.description}
+                onChange={handleChange}
+              />
+            </>
           ))}
 
           <Grid item xs={12}>
@@ -164,4 +216,4 @@ const New = () => {
   );
 };
 
-export default New;
+export default Modify;
